@@ -1,0 +1,36 @@
+*{
+    background-color: black;
+    color: white;
+}
+
+button {
+    background-color: rgb(153, 0, 255);
+    color: black;
+    border:  1px solid black;
+    padding: 5px 5px;
+    margin: 4px;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: rgb(183, 75, 255);
+    
+}
+
+button:active {
+    background-color: rgb(21, 150, 255);
+}
+
+.array-container{
+    position: absolute;
+    left: 68px;
+    top: 15px
+}
+
+.array-bar{
+    width: 5px;
+    background-color: rgb(0, 140, 255);
+    display: inline-block;
+    margin: 3px 1px 0;
+}
