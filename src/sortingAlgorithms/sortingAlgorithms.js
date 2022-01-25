@@ -1,37 +1,58 @@
-export const mergeSort = array => {
-    if (array.length === 1) return array;
-    
-    const mid = Math.floor(array.length/2);
-    const left = mergeSort(array.slice(0, mid));
-    const right = mergeSort(array.slice(mid));
+export function getMergeSortAnimations(array){
+    const animations = [];
+    if (array.length <= 1) return array;
 
-    const sorted = [];
+    const auxiliary = array.slice();
+    mergeSortHelper(array, 0, array.length-1, auxiliary, animations);
+    return animations;
+}
 
-    let i=0, j=0;
+function mergeSortHelper(array, start, end, auxiliary, animations,) {
+    if(start===end) return;
 
-    while(i<left.length && j<right.length){
-        if (left[i]<right[j]){
-            sorted.push(left[i++]);
-        } else{
-            sorted.push(right[j++])
+    const mid = Math.floor((start+end)/2);
+    mergeSortHelper(auxiliary, start, mid, array, animations);
+    mergeSortHelper(auxiliary, mid+1, end, array, animations);
+    merge(array, start, mid, end, auxiliary, animations);
+}
+
+function merge(array, start, mid, end, auxiliary, animations,){
+    let k=start, i=start, j=mid+1;
+
+    while(i<=mid && j<=end){
+
+        //selecting the comparison values
+        animations.push([i,j]);
+
+        //un-selecting the selected values
+        animations.push([i, j]);
+
+        //sorting
+        if(auxiliary[i]<=auxiliary[j]){
+
+            //overwriting the main array with the sorted value
+            //changing its height to aux[i]
+            animations.push([k, auxiliary[i]]);
+            array[k++]=auxiliary[i++];
+        } 
+        
+        else{
+            animations.push([k, auxiliary[j]]);
+            array[k++]=auxiliary[j++];
         }
     }
 
-    while (i<left.length) sorted.push(left[i++]);
-    while (j<right.length) sorted.push(right[j++]);
-    return sorted; 
-};
-
-// export const bubbleSort = array => {
-//     var i, j ,temp;
-//     for(i=0;i<array.length;i++){
-//         for(j=0;j<array.length-i-1;j++){
-//             if(array[j]>array[j+1]){
-//                 temp = array[j+1];
-//                 array[j+1] = array[j];
-//                 array[j]=temp;
-//             }
-//         }
-//     }
-//     return array;
-// };
+    while(i<=mid){
+        animations.push([i, i]);
+        animations.push([i, i]);
+        animations.push([k, auxiliary[i]]);
+        array[k++]=auxiliary[i++];
+    }
+    
+    while(j<=end){
+        animations.push([j, j]);
+        animations.push([j, j]);
+        animations.push([k, auxiliary[j]]);
+        array[k++]=auxiliary[j++];
+    }
+}
