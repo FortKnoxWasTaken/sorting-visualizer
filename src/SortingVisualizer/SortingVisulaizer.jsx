@@ -4,11 +4,12 @@ import './SortingVisualizer.css'
 
 const ARRAY_LENGTH = 200;
 
-const ANIMATION_SPEED_MS = 5; 
+const ANIMATION_SPEED_MS = 1.5; 
 
 const PRIMARY_COLOR = 'rgb(0, 140, 255)';
 
-const SECONDARY_COLOR = 'red';
+const SECONDARY_COLOR = 'white';
+// 'rgb(0, 47, 255)';
 
 export default class SortingVisualizer extends React.Component{
     constructor(props){
@@ -23,7 +24,7 @@ export default class SortingVisualizer extends React.Component{
         this.resetArray();
     }
 
-    resetArray(){
+    resetArray(redraw){
         const array = [];
         for(let i=0; i< ARRAY_LENGTH; i++){
             array.push(randomIntFromInterval(5, 680));
@@ -60,17 +61,43 @@ export default class SortingVisualizer extends React.Component{
                 }, i*ANIMATION_SPEED_MS);
             }
         }
-    }
 
-    quickSort(){
-        
-    }
-
-    heapSort(){
+        console.log(arraysAreEqual(this.state.array, this.state.array.slice().sort((a,b) => a-b)));
     }
 
     bubbleSort(){
+        const animations = sortingAlgorithms.getBubbleSortAnimations(this.state.array);
 
+        for(let i=0;i<animations.length;i++){
+            const arrayBars = document.getElementsByClassName("array-bar");
+
+            const isColorChange = i%3 !==2;
+
+            if(isColorChange){
+                const [firstBarIdx, secondBarIdx]=animations[i];
+                const firstBar = arrayBars[firstBarIdx].style;
+                const secondBar = arrayBars[secondBarIdx].style;
+
+                const color = i%3 ===0? SECONDARY_COLOR : PRIMARY_COLOR;
+
+                setTimeout(()=> {
+                    firstBar.backgroundColor = color;
+                    secondBar.backgroundColor = color;
+                }, i*ANIMATION_SPEED_MS);   
+            } 
+            
+            else{
+                setTimeout(()=> {
+                    const [firstBarIdx, firstBarNewHeight, secondBarIdx, secondBarNewHeight] = animations[i];
+                    const firstBar = arrayBars[firstBarIdx].style;
+                    const secondBar = arrayBars[secondBarIdx].style;
+                    firstBar.height = `${firstBarNewHeight}px`;
+                    secondBar.height = `${secondBarNewHeight}px`;
+                }, i*ANIMATION_SPEED_MS);
+            }
+        }
+
+        console.log(arraysAreEqual(this.state.array, this.state.array.slice().sort((a,b) => a-b)));
     }
     
     render() {
@@ -86,7 +113,7 @@ export default class SortingVisualizer extends React.Component{
             ))} 
 
             <div>
-                <button onClick={()=> this.resetArray()}>Generate New Array</button>
+                <button id='reset' onClick={()=> this.resetArray()}>Generate New Array</button>
                 <button onClick={()=> this.mergeSort()}>Merge Sort</button>
                 <button onClick={()=> this.quickSort()}>Quick Sort</button>
                 <button onClick={()=> this.heapSort()}>Heap Sort</button>

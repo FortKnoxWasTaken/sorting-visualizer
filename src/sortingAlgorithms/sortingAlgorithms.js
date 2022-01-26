@@ -56,3 +56,43 @@ function merge(array, start, mid, end, auxiliary, animations,){
         array[k++]=auxiliary[j++];
     }
 }
+
+
+
+
+export function getBubbleSortAnimations(array){
+    const animations = [];
+    if (array.length <= 1) return array;
+    bubbleSortHelper(array, animations);
+    return animations;
+}
+
+function bubbleSortHelper(array, animations){
+
+    const len = array.length;
+
+    for(let i=0; i<len;i++){
+        let noSwapsOccured = false;
+
+        for(let j=0; j<len-i-1;j++){
+            animations.push([j,j+1]);
+            animations.push([j,j+1]);
+
+            if(array[j]<=array[j+1]){
+                animations.push([j, array[j], j+1, array[j+1]]);
+            }
+
+            if(array[j]>array[j+1]){
+                noSwapsOccured=true;
+                animations.push([j, array[j+1], j+1, array[j]]);
+                const temp = array[j+1];
+                array[j+1]=array[j];
+                array[j]=temp;
+            }
+        }
+
+        if(!noSwapsOccured){
+            return;
+        }
+    }
+}
