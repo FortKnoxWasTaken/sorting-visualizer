@@ -4,6 +4,7 @@ export function getMergeSortAnimations(array){
 
     const auxiliary = array.slice();
     mergeSortHelper(array, 0, array.length-1, auxiliary, animations);
+    
     return animations;
 }
 
@@ -94,5 +95,40 @@ function bubbleSortHelper(array, animations){
         if(!noSwapsOccured){
             return;
         }
+    }
+}
+
+
+
+
+
+export function getSelectionSortAnimations(array){
+    const animations = [];
+    if(array.length<=1) return array;
+    selectionSortHelper(array, animations);
+    return animations;
+}
+
+function selectionSortHelper(array, animations){
+    const len = array.length
+
+    for(let i=0;i<len;i++){
+        animations.push(['selectFirst',i]);
+        let minSoFar = i;
+        for(let j=i+1;j<len;j++){
+            if(array[minSoFar]>array[j]){
+                minSoFar=j;
+            }
+            animations.push(['findMin', j]);
+            animations.push(['reverseColor', j]);
+        }
+        animations.push(['minSoFar', minSoFar]);
+        animations.push(['reverseColor', minSoFar]);
+        animations.push(['heightChange', minSoFar, array[i], i, array[minSoFar]]);
+        animations.push(['colorChange', i, minSoFar]);
+
+        const temp = array[i];
+        array[i]=array[minSoFar];
+        array[minSoFar]=temp;
     }
 }
