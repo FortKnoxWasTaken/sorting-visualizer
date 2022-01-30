@@ -132,3 +132,52 @@ function selectionSortHelper(array, animations){
         array[minSoFar]=temp;
     }
 }
+
+
+
+
+export function getQuickSortAnimations(array){
+    const animations = [];
+    if(array.length<=1) return;
+    quickSort(array, 0, array.length-1, animations);
+    return animations;
+}
+
+function quickSort(array, left, right, animations){
+    if(left<right){
+        let partitionIndex = partition(array, left, right, animations);
+        quickSort(array, left, partitionIndex-1, animations);
+        quickSort(array, partitionIndex+1, right, animations);
+    }
+    return;
+}
+
+function partition(array, left, right, animations){
+    let pivot = array[right];
+
+    animations.push(['pivot', right])
+    
+    var idx= left-1;
+
+    for(let i=left;i<right;i++){
+        animations.push(['increments', i]);
+        animations.push(['increments', i]);
+        if(array[i]<pivot){  
+
+            idx++;
+            
+            animations.push(['swap', idx, array[i], i, array[idx]]);
+            swap(array, idx, i);
+        }
+    }
+    animations.push(['swap', idx+1, array[right], right, array[idx+1]]);
+    swap(array, idx+1, right); 
+    animations.push(['unpivot',right]);
+    return idx+1;
+}
+
+function swap(array, a, b){
+    const temp = array[b];
+    array[b]=array[a];
+    array[a]=temp;
+}
